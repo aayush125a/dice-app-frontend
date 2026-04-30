@@ -1,0 +1,30 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "baseBuilder": {
+    "ownerAddress": ""
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "Dice",
+    "subtitle": "Roll and win",
+    "description": "A simple dice betting mini app.",
+    "screenshotUrls": ["/screenshot.png"],
+    "iconUrl": "/icon.png",
+    "splashImageUrl": "/splash.png",
+    "splashBackgroundColor": "#000000",
+    "homeUrl": "/",
+    "webhookUrl": "/api/webhook",
+    "primaryCategory": "games",
+    "tags": ["dice", "base"],
+    "heroImageUrl": "/hero.png",
+    "tagline": "Roll the dice",
+    "ogTitle": "Dice",
+    "ogDescription": "Roll and win on Base Sepolia",
+    "ogImageUrl": "/hero.png"
+  }
+}
+

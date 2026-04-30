@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer base {
   :root {
     --background: #ffffff;
@@ -57,4 +61,170 @@
       color-scheme: dark;
     }
   }
+}
+
+/* --- Premium 3D Dice (CSS-only) --- */
+.diceStage {
+  position: relative;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  padding: 10px 0 18px;
+}
+
+.diceSpotlight {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: min(360px, 92%);
+  height: 160px;
+  background:
+    radial-gradient(closest-side, rgba(96, 165, 250, 0.28), rgba(0, 0, 0, 0)),
+    radial-gradient(closest-side, rgba(250, 204, 21, 0.16), rgba(0, 0, 0, 0));
+  filter: blur(6px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.diceWrap {
+  --dice: 104px;
+  --half: calc(var(--dice) / 2);
+  position: relative;
+  width: var(--dice);
+  height: var(--dice);
+  perspective: 900px;
+  transform: translateZ(0);
+}
+
+.diceCube {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.2, 1);
+  will-change: transform;
+  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.55));
+}
+
+.diceFace {
+  position: absolute;
+  width: var(--dice);
+  height: var(--dice);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 120% at 20% 15%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.72) 38%, rgba(232, 232, 232, 0.86) 65%, rgba(210, 210, 210, 0.92)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.12));
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -10px 20px rgba(0, 0, 0, 0.16);
+  backface-visibility: hidden;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 14px;
+  gap: 10px;
+}
+
+.diceFace::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 14px;
+  background: radial-gradient(closest-side at 25% 18%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.pip {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  align-self: center;
+  justify-self: center;
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.35), rgba(0, 0, 0, 0) 40%),
+    radial-gradient(circle at 60% 70%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 55%),
+    radial-gradient(circle at 50% 50%, #1b1b1e, #0b0b0c 70%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.18),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Pip positions (3x3 grid) */
+.pip--tl { grid-area: 1 / 1; }
+.pip--tc { grid-area: 1 / 2; }
+.pip--tr { grid-area: 1 / 3; }
+.pip--ml { grid-area: 2 / 1; }
+.pip--c  { grid-area: 2 / 2; }
+.pip--mr { grid-area: 2 / 3; }
+.pip--bl { grid-area: 3 / 1; }
+.pip--bc { grid-area: 3 / 2; }
+.pip--br { grid-area: 3 / 3; }
+
+/* Face placement in 3D space (standard die: 1 opposite 6, 2 opposite 5, 3 opposite 4) */
+.diceFace--front  { transform: rotateY(  0deg) translateZ(var(--half)); }
+.diceFace--back   { transform: rotateY(180deg) translateZ(var(--half)); }
+.diceFace--right  { transform: rotateY( 90deg) translateZ(var(--half)); }
+.diceFace--left   { transform: rotateY(-90deg) translateZ(var(--half)); }
+.diceFace--top    { transform: rotateX( 90deg) translateZ(var(--half)); }
+.diceFace--bottom { transform: rotateX(-90deg) translateZ(var(--half)); }
+
+/* Resting orientations: bring result face to the front */
+.diceCube--face-1 { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+.diceCube--face-2 { transform: rotateX(-90deg) rotateY(0deg) rotateZ(0deg); }
+.diceCube--face-3 { transform: rotateX(0deg) rotateY(-90deg) rotateZ(0deg); }
+.diceCube--face-4 { transform: rotateX(0deg) rotateY(90deg) rotateZ(0deg); }
+.diceCube--face-5 { transform: rotateX(90deg) rotateY(0deg) rotateZ(0deg); }
+.diceCube--face-6 { transform: rotateX(0deg) rotateY(180deg) rotateZ(0deg); }
+
+.diceCube--tumbling {
+  animation: dice-tumble 1600ms cubic-bezier(0.15, 0.8, 0.2, 1) both;
+}
+
+@keyframes dice-tumble {
+  0% {
+    transform: rotateX(20deg) rotateY(-25deg) rotateZ(0deg) translateY(0) translateZ(0);
+  }
+  18% {
+    transform: rotateX(220deg) rotateY(160deg) rotateZ(90deg) translateY(-6px) translateZ(10px);
+  }
+  42% {
+    transform: rotateX(520deg) rotateY(-140deg) rotateZ(210deg) translateY(-10px) translateZ(16px);
+  }
+  70% {
+    transform: rotateX(860deg) rotateY(260deg) rotateZ(340deg) translateY(-4px) translateZ(10px);
+  }
+  100% {
+    transform: rotateX(1080deg) rotateY(540deg) rotateZ(360deg) translateY(0) translateZ(0);
+  }
+}
+
+.diceShadow {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 12px);
+  width: calc(var(--dice) * 1.05);
+  height: 26px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+  filter: blur(3px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.diceShadow--moving {
+  animation: dice-shadow 1600ms cubic-bezier(0.15, 0.8, 0.2, 1) both;
+}
+
+@keyframes dice-shadow {
+  0%   { transform: translateX(-50%) scale(0.95); opacity: 0.75; }
+  40%  { transform: translateX(-50%) scale(0.72); opacity: 0.5; }
+  70%  { transform: translateX(-50%) scale(0.82); opacity: 0.6; }
+  100% { transform: translateX(-50%) scale(0.95); opacity: 0.75; }
+}
+
+@media (max-width: 380px) {
+  .diceWrap { --dice: 92px; }
+  .pip { width: 13px; height: 13px; }
 }
